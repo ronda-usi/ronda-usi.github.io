@@ -19,7 +19,7 @@
 <meta name="apple-mobile-web-app-title" content="Estrelas">
 <link rel="stylesheet" href="vendor/bootstrap-icons/bootstrap-icons.min.css">
 <style>
-/* ESTRELAS DA RONDA (celular) — KSB Brasil · Processo Usinagem · versão 1.1.1
+/* ESTRELAS DA RONDA (celular) — KSB Brasil · Processo Usinagem · versão 1.2
    Nada sensível neste arquivo: o endereço da planilha e a chave ficam só no aparelho, cifrados com o PIN (AES-GCM). */
 @font-face{font-family:Poppins;font-weight:400;font-display:swap;src:url(vendor/poppins/poppins-latin-400-normal.woff2) format('woff2')}
 @font-face{font-family:Poppins;font-weight:500;font-display:swap;src:url(vendor/poppins/poppins-latin-500-normal.woff2) format('woff2')}
@@ -143,7 +143,7 @@ nav.abas .bol{position:absolute;top:2px;left:calc(50% + 6px);background:var(--am
 <script src="estrelas-regras.js"></script>
 <script>
 'use strict';
-const VERSAO = '1.1.1';
+const VERSAO = '1.2';
 const LS = { cfg: 'est-cfg', dados: 'est-dados', tent: 'est-tent', pref: 'est-pref' };
 const URL_OK = u => /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(u) || (/^(127\.0\.0\.1|localhost)$/.test(location.hostname) && /^http:\/\/127\.0\.0\.1:\d+\/exec$/.test(u));
 const $ = s => document.querySelector(s);
