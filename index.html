@@ -19,21 +19,21 @@
 <meta name="apple-mobile-web-app-title" content="Estrelas">
 <link rel="stylesheet" href="vendor/bootstrap-icons/bootstrap-icons.min.css">
 <style>
-/* ESTRELAS DA RONDA (celular) — KSB Brasil · Processo Usinagem · versão 1.1
+/* ESTRELAS DA RONDA (celular) — KSB Brasil · Processo Usinagem · versão 1.1.1
    Nada sensível neste arquivo: o endereço da planilha e a chave ficam só no aparelho, cifrados com o PIN (AES-GCM). */
 @font-face{font-family:Poppins;font-weight:400;font-display:swap;src:url(vendor/poppins/poppins-latin-400-normal.woff2) format('woff2')}
 @font-face{font-family:Poppins;font-weight:500;font-display:swap;src:url(vendor/poppins/poppins-latin-500-normal.woff2) format('woff2')}
 @font-face{font-family:Poppins;font-weight:600;font-display:swap;src:url(vendor/poppins/poppins-latin-600-normal.woff2) format('woff2')}
 @font-face{font-family:Poppins;font-weight:700;font-display:swap;src:url(vendor/poppins/poppins-latin-700-normal.woff2) format('woff2')}
 :root{
-  --azul:#0066B3;--azul-esc:#003D71;--azul-cl:#E8F2FA;
+  --azul:#0066B3;--azul-esc:#003D71;--azul-cl:#E8F2FA;--acento:#0066B3;
   --bg:#F2F5F9;--card:#FFFFFF;--txt:#1B2631;--txt2:#566573;--mut:#8A97A6;--borda:#E3E8EE;
   --verde:#1E9E55;--verde-bg:#DDF5E7;--amar:#F1C40F;--amar-esc:#9A7B00;--amar-bg:#FFF6D1;--verm:#C0392B;--verm-bg:#FADBD8;
   --sombra:0 2px 10px rgba(0,40,80,.08);--raio:16px;
   --topo:env(safe-area-inset-top,0px);--baixo:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme:dark){:root{
-  --bg:#0E1621;--card:#16212F;--txt:#E8EEF5;--txt2:#AAB7C6;--mut:#7C8A9B;--borda:#243244;--azul-cl:#13304D;
+  --bg:#0E1621;--card:#16212F;--txt:#E8EEF5;--txt2:#B7C3D0;--mut:#8C99A8;--borda:#26364A;--azul-cl:#1F3A57;--acento:#EEF4FA;
   --verde-bg:rgba(39,174,96,.18);--amar-bg:rgba(241,196,15,.16);--verm-bg:rgba(231,76,60,.2);--amar-esc:#F1C40F;--sombra:0 2px 10px rgba(0,0,0,.35);
 }}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -45,7 +45,9 @@ input:focus,select:focus,textarea:focus{border-color:var(--azul)}
 .oculto{display:none!important}
 /* topo */
 .topo{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,#0077C8,#003D71);color:#fff;padding:calc(10px + var(--topo)) 14px 10px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(0,30,60,.25)}
-.topo .logo{height:20px;filter:brightness(0) invert(1)}
+.topo .selo-ksb{display:grid;place-items:center;flex-shrink:0}
+.topo .selo-ksb img{height:26px;width:auto;display:block;filter:drop-shadow(0 1px 4px rgba(0,0,0,.35))}
+.topo .tit{padding-left:10px;border-left:1px solid rgba(255,255,255,.25)}
 .topo .tit{flex:1;min-width:0;line-height:1.15}
 .topo .tit b{display:block;font-size:15px;font-weight:600}
 .topo .tit small{font-size:11px;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
@@ -76,17 +78,17 @@ main{padding:12px 12px calc(84px + var(--baixo));max-width:720px;margin:0 auto}
 .lin{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--borda)}.lin:last-child{border-bottom:0}
 .lin .tx{flex:1;min-width:0}.lin .tx b{font-weight:600;display:block}.lin .tx small{color:var(--mut);font-size:12px;display:block}
 .lin.cancel{opacity:.45}.lin.cancel b{text-decoration:line-through}
-.bt{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;padding:12px 16px;font-weight:600;background:var(--azul-cl);color:var(--azul)}
+.bt{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;padding:12px 16px;font-weight:600;background:var(--azul-cl);color:var(--acento)}
 .bt.pri{background:var(--azul);color:#fff}.bt.lg{width:100%;padding:15px;font-size:16px}.bt.peq{padding:7px 10px;font-size:13px;border-radius:10px}
 .bt.perigo{background:var(--verm-bg);color:var(--verm)}
 .bt:disabled{opacity:.5}
 .sub{color:var(--txt2);font-size:13px;line-height:1.45}
 label.campo{display:block;margin-bottom:12px;font-size:13px;font-weight:500;color:var(--txt2)}label.campo input,label.campo select,label.campo textarea{margin-top:5px}
-.msg{border-radius:12px;padding:10px 12px;font-size:13px;display:flex;gap:8px;margin-bottom:10px;line-height:1.4}.msg.info{background:var(--azul-cl);color:var(--azul)}.msg.warn{background:var(--amar-bg);color:var(--amar-esc)}.msg.erro{background:var(--verm-bg);color:var(--verm)}
+.msg{border-radius:12px;padding:10px 12px;font-size:13px;display:flex;gap:8px;margin-bottom:10px;line-height:1.4}.msg.info{background:var(--azul-cl);color:var(--acento)}.msg.warn{background:var(--amar-bg);color:var(--amar-esc)}.msg.erro{background:var(--verm-bg);color:var(--verm)}
 /* navegação de baixo */
 nav.abas{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--card);border-top:1px solid var(--borda);display:flex;padding:6px 6px calc(6px + var(--baixo));box-shadow:0 -4px 16px rgba(0,30,60,.06)}
 nav.abas button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:500;color:var(--mut);padding:6px 0;border-radius:12px;position:relative}
-nav.abas button i{font-size:21px}nav.abas button.on{color:var(--azul)}nav.abas button.on i{transform:translateY(-1px)}
+nav.abas button i{font-size:21px}nav.abas button.on{color:var(--acento)}nav.abas button.on i{background:var(--azul-cl);border-radius:12px;padding:1px 14px}nav.abas button.on i{transform:translateY(-1px)}
 nav.abas .bol{position:absolute;top:2px;left:calc(50% + 6px);background:var(--amar);color:#3D2E00;font-size:10px;font-weight:700;border-radius:10px;min-width:17px;height:17px;line-height:17px;padding:0 4px}
 /* folha de baixo (escolha da estrela) */
 .veu{position:fixed;inset:0;background:rgba(5,20,35,.45);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
@@ -104,11 +106,13 @@ nav.abas .bol{position:absolute;top:2px;left:calc(50% + 6px);background:var(--am
 .motivo.a{border-left-color:var(--amar)}
 .motivo .tx{flex:1;min-width:0}.motivo b{display:block;font-weight:600}.motivo small{color:var(--mut);font-size:12px;display:block;margin-top:1px}
 .motivo .fav{color:#F39C12}
-.voltar{display:flex;align-items:center;gap:6px;color:var(--azul);font-weight:600;padding:6px 0 10px}
+.voltar{display:flex;align-items:center;gap:6px;color:var(--acento);font-weight:600;padding:6px 0 10px}
 /* telas de entrada (parear / PIN) */
 .entrada{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(24px + var(--topo)) 22px calc(24px + var(--baixo));background:linear-gradient(160deg,#0077C8 0%,#003D71 70%);color:#fff}
 .entrada .marca{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:22px;text-align:center}
 .entrada .marca img.ic{width:76px;height:76px;border-radius:22px;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.entrada .ksb{margin-bottom:10px}
+.entrada .ksb img{height:30px;width:auto;display:block;filter:drop-shadow(0 1px 4px rgba(0,0,0,.35))}
 .entrada .marca b{font-size:22px;font-weight:700}.entrada .marca small{opacity:.8;font-size:13px}
 .entrada .caixa{background:var(--card);color:var(--txt);border-radius:22px;padding:18px;width:100%;max-width:400px;box-shadow:0 12px 40px rgba(0,0,0,.25)}
 .pontos{display:flex;justify-content:center;gap:14px;margin:8px 0 18px}.pontos i{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.7)}.pontos i.on{background:#fff;border-color:#fff}
@@ -121,8 +125,8 @@ nav.abas .bol{position:absolute;top:2px;left:calc(50% + 6px);background:var(--am
 .entrada .rodape{margin-top:20px;font-size:11px;opacity:.7;text-align:center}
 .entrada a{color:#fff}
 /* aviso (toast) */
-.toast{position:fixed;left:12px;right:12px;bottom:calc(80px + var(--baixo));z-index:60;background:#1B2631;color:#fff;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;font-size:14px;box-shadow:0 8px 30px rgba(0,0,0,.3);transform:translateY(150%);transition:transform .25s;max-width:560px;margin:0 auto}
-.toast.on{transform:none}.toast .tx{flex:1;min-width:0}.toast button{color:#7FC4FF;font-weight:700;padding:4px 6px}
+.toast{position:fixed;left:12px;right:12px;bottom:calc(80px + var(--baixo));z-index:60;background:#1B2631;color:#fff;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;font-size:14px;box-shadow:0 8px 30px rgba(0,0,0,.3);transform:translateY(calc(100% + 140px));visibility:hidden;transition:transform .25s,visibility 0s .25s;max-width:560px;margin:0 auto}
+.toast.on{transform:none;visibility:visible;transition:transform .25s}.toast .tx{flex:1;min-width:0}.toast button{color:#7FC4FF;font-weight:700;padding:4px 6px}
 .toast.erro{background:#922B21}
 .ver{text-align:center;color:var(--mut);font-size:11px;margin:18px 0 6px;line-height:1.6}
 .alerta{border-left:5px solid var(--amar)}.alerta.carta{border-left-color:var(--verm)}
@@ -139,7 +143,7 @@ nav.abas .bol{position:absolute;top:2px;left:calc(50% + 6px);background:var(--am
 <script src="estrelas-regras.js"></script>
 <script>
 'use strict';
-const VERSAO = '1.1';
+const VERSAO = '1.1.1';
 const LS = { cfg: 'est-cfg', dados: 'est-dados', tent: 'est-tent', pref: 'est-pref' };
 const URL_OK = u => /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(u) || (/^(127\.0\.0\.1|localhost)$/.test(location.hostname) && /^http:\/\/127\.0\.0\.1:\d+\/exec$/.test(u));
 const $ = s => document.querySelector(s);
@@ -148,6 +152,7 @@ const norm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLow
 const dataBR = iso => iso ? iso.slice(8, 10) + '/' + iso.slice(5, 7) : '';
 const iniciais = n => String(n || '').split(/\s+/).filter(Boolean).filter((x, i, a) => i === 0 || i === a.length - 1).map(x => x[0]).join('').toUpperCase();
 const curto = n => { const p = String(n || '').split(/\s+/).filter(Boolean); return p.length > 2 ? p[0] + ' ' + p[p.length - 1] : p.join(' '); };
+const abrev = n => { const p = String(n || '').split(/\s+/).filter(Boolean); return p.length > 1 ? p[0] + ' ' + p[p.length - 1][0] + '.' : p.join(' '); }; // cabeçalho: Rogerinho R.
 const uuid = () => crypto.randomUUID ? crypto.randomUUID() : Array.from(crypto.getRandomValues(new Uint8Array(16)), b => b.toString(16).padStart(2, '0')).join('');
 const COR = { 'Destaque': 'v', 'Atenção': 'a' };
 const ICO_COMP = { 'Segurança': 'bi-shield-check', 'Qualidade': 'bi-rulers', 'Foco e disciplina': 'bi-bullseye', 'Colaboração e iniciativa': 'bi-people' };
@@ -207,7 +212,7 @@ function telaPin(modo, msg) {
   limparToast();
   pinModo = modo; pinBuf = '';
   const tit = { entrar: 'Digite seu PIN', criar: 'Crie um PIN de 4 a 6 números', confirmar: 'Repita o PIN' }[modo];
-  $('#app').innerHTML = `<div class="entrada"><div class="marca"><img class="ic" src="icones/icone-192.png" alt=""><b>Estrelas da Ronda</b><small>${esc(tit)}</small></div>
+  $('#app').innerHTML = `<div class="entrada"><div class="marca"><span class="ksb"><img src="logo_ksb.svg" alt="KSB"></span><img class="ic" src="icones/icone-192.png" alt=""><b>Estrelas da Ronda</b><small>${esc(tit)}</small></div>
     <div class="pin-msg" id="pinMsg">${esc(msg || '')}</div><div class="pontos" id="pontos">${'<i></i>'.repeat(6)}</div>
     <div class="teclado">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button onclick="tecla('${n}')">${n}</button>`).join('')}
       <button class="lim" onclick="tecla('apaga')" title="Apagar"><i class="bi bi-backspace"></i></button><button onclick="tecla('0')">0</button><button class="lim" onclick="tecla('ok')">OK</button></div>
@@ -258,7 +263,7 @@ function esqueci() {
 // ---------------------------------------------------------------- pareamento (código de 8 letras gerado no PC, vale 10 min)
 function telaParear(msg) {
   if (!msg) limparToast();
-  $('#app').innerHTML = `<div class="entrada"><div class="marca"><img class="ic" src="icones/icone-192.png" alt=""><b>Estrelas da Ronda</b><small>Processo Usinagem · KSB Jundiaí</small></div>
+  $('#app').innerHTML = `<div class="entrada"><div class="marca"><span class="ksb"><img src="logo_ksb.svg" alt="KSB"></span><img class="ic" src="icones/icone-192.png" alt=""><b>Estrelas da Ronda</b><small>Processo Usinagem · KSB Jundiaí</small></div>
     <div class="caixa">${msg ? `<div class="msg warn"><i class="bi bi-exclamation-triangle"></i><div>${esc(msg)}</div></div>` : ''}
       <div class="sub" style="margin-bottom:12px">No PC: <b>Estrelas da ronda › Celular › Gerar código</b>.</div>
       <label class="campo">Endereço da planilha (termina em /exec)<input id="pUrl" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://script.google.com/macros/s/…/exec"></label>
@@ -321,7 +326,7 @@ function marcaRede(on) { const n = $('#net'); if (n) { n.classList.toggle('off',
 const UI = { aba: 'ronda', turno: '', grupo: '', busca: '' };
 function principal() {
   UI.turno = UI.turno || pref().turno || '';
-  $('#app').innerHTML = `<header class="topo"><img class="logo" src="logo_ksb.svg" alt="KSB"><div class="tit"><b>Estrelas da Ronda</b><small id="sub"></small></div><span class="net" id="net"></span>
+  $('#app').innerHTML = `<header class="topo"><span class="selo-ksb"><img src="logo_ksb.svg" alt="KSB"></span><div class="tit"><b>Estrelas da Ronda</b><small id="sub"></small></div><span class="net" id="net"></span>
       <button class="bt-ic" onclick="sincronizar(true)" title="Sincronizar"><i class="bi bi-arrow-repeat"></i><span class="bol oculto" id="bolFila"></span></button>
       <button class="bt-ic" onclick="travar('Bloqueado.')" title="Bloquear"><i class="bi bi-lock"></i></button></header>
     <main id="corpo"></main>
@@ -333,7 +338,7 @@ function irAba(a) { UI.aba = a; render(); scrollTo(0, 0); }
 function render() {
   if (!K || !$('#corpo')) return;
   document.querySelectorAll('nav.abas button').forEach(b => b.classList.toggle('on', b.dataset.aba === UI.aba));
-  $('#sub').textContent = (C.papel === 'Admin' ? 'Administrador' : 'Líder') + ' · ' + curto(C.lider);
+  $('#sub').textContent = (C.papel === 'Admin' ? 'Admin' : 'Líder') + ' · ' + abrev(C.lider);
   const bf = $('#bolFila'); bf.classList.toggle('oculto', !D.fila.length); bf.textContent = D.fila.length;
   const nA = ESTRELAS.alertas(D.estrelas, D).length, ba = $('#bolAl'); ba.classList.toggle('oculto', !nA); ba.textContent = nA;
   ({ ronda: abaRonda, hoje: abaHoje, alertas: abaAlertas, resumo: abaResumo, mais: abaMais })[UI.aba]();
