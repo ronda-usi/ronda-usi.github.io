@@ -19,7 +19,7 @@
 <meta name="apple-mobile-web-app-title" content="Estrelas">
 <link rel="stylesheet" href="vendor/bootstrap-icons/bootstrap-icons.min.css">
 <style>
-/* ESTRELAS DA RONDA (celular) — KSB Brasil · Processo Usinagem · versão 1.2
+/* ESTRELAS DA RONDA (celular) — KSB Brasil · Processo Usinagem · versão 1.2.1
    Nada sensível neste arquivo: o endereço da planilha e a chave ficam só no aparelho, cifrados com o PIN (AES-GCM). */
 @font-face{font-family:Poppins;font-weight:400;font-display:swap;src:url(vendor/poppins/poppins-latin-400-normal.woff2) format('woff2')}
 @font-face{font-family:Poppins;font-weight:500;font-display:swap;src:url(vendor/poppins/poppins-latin-500-normal.woff2) format('woff2')}
@@ -97,6 +97,17 @@ nav.abas .bol{position:absolute;top:2px;left:calc(50% + 6px);background:var(--am
 .folha.on{transform:none}
 .folha .puxa{width:42px;height:5px;border-radius:3px;background:var(--borda);margin:4px auto 10px}
 .f-cab{display:flex;align-items:center;gap:12px;margin-bottom:12px}.f-cab .tx{flex:1;min-width:0}.f-cab b{font-size:17px;display:block}.f-cab small{color:var(--mut)}
+.fechar{width:44px;height:44px;flex:none;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--azul-cl);color:var(--acento);font-size:20px;border:2px solid var(--acento);box-shadow:var(--sombra)}
+.fechar i{-webkit-text-stroke:1px currentColor}
+.sel-maq{border:2px solid var(--acento)!important;font-weight:600;font-size:16px!important}
+.maq-ag{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--txt2);margin:-4px 0 10px}
+.ok-est{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:14px 4px 4px}
+.ok-est b{font-size:20px}.ok-est.v b{color:var(--verde)}.ok-est.a b{color:var(--amar-esc)}
+.ok-est .q{font-size:15px;font-weight:600}.ok-est small{color:var(--txt2);font-size:13px}
+.ok-est .env{font-size:12px;color:var(--txt2);min-height:16px}
+.conta{width:100%;height:6px;border-radius:3px;background:var(--borda);overflow:hidden;margin:8px 0 2px}
+.conta i{display:block;height:100%;width:100%;background:var(--acento);transition:width linear}
+.ok-est .dois{width:100%}
 .dois{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
 .grande{border-radius:20px;padding:20px 10px 16px;display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:700;font-size:16px;box-shadow:var(--sombra)}
 .grande i{font-size:44px}
@@ -143,7 +154,7 @@ nav.abas .bol{position:absolute;top:2px;left:calc(50% + 6px);background:var(--am
 <script src="estrelas-regras.js"></script>
 <script>
 'use strict';
-const VERSAO = '1.2';
+const VERSAO = '1.2.1';
 const LS = { cfg: 'est-cfg', dados: 'est-dados', tent: 'est-tent', pref: 'est-pref' };
 const URL_OK = u => /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(u) || (/^(127\.0\.0\.1|localhost)$/.test(location.hostname) && /^http:\/\/127\.0\.0\.1:\d+\/exec$/.test(u));
 const $ = s => document.querySelector(s);
@@ -373,32 +384,54 @@ function listaRonda() {
 // ---------------------------------------------------------------- folha: pessoa → tipo → motivo (3 toques)
 let F = null;
 function abrirFolha(html) { $('#folha').innerHTML = '<div class="puxa"></div>' + html; $('#folha').classList.add('on'); $('#veu').classList.add('on'); $('#folha').scrollTop = 0; }
-function fecharFolha() { $('#folha').classList.remove('on'); $('#veu').classList.remove('on'); F = null; }
+function fecharFolha() { clearInterval(confT); confT = null; $('#folha').classList.remove('on'); $('#veu').classList.remove('on'); F = null; }
+// lista de máquinas: "sem máquina" primeiro, a do cadastro em seguida, as outras por grupo
+function opcoesMaq(p) {
+  const sel = F.maquina || '', op = (v, t) => `<option value="${esc(v)}" ${v === sel ? 'selected' : ''}>${esc(t)}</option>`;
+  const ordem = g => { const x = D.equipe.grupos.find(y => y.grupo === g); return x ? x.ordem : 99; }, por = {};
+  D.equipe.maquinas.forEach(m => { if (!m.maquina || m.maquina === p.maquina) return; const g = m.grupo || 'Outras'; (por[g] = por[g] || []).push(m); });
+  return op('', 'Sem máquina / não se aplica') + (p.maquina ? op(p.maquina, p.maquina + ' (do cadastro)') : '')
+    + Object.keys(por).sort((a, b) => ordem(a) - ordem(b) || a.localeCompare(b)).map(g => `<optgroup label="${esc(g)}">${por[g].map(m => op(m.maquina, m.maquina + (m.descricao ? ' · ' + m.descricao : ''))).join('')}</optgroup>`).join('');
+}
 function abrirPessoa(mat, tipo) {
   const p = D.equipe.pessoas.find(x => String(x.mat) === String(mat)); if (!p) return;
   F = F && F.mat === mat ? { ...F, tipo } : { mat, tipo, maquina: p.maquina || '' };
   const d30 = ESTRELAS.isoMenos(ESTRELAS.isoHoje(), 29), R = D.estrelas.filter(e => ESTRELAS.ativa(e) && String(e.mat) === String(mat) && e.data >= d30);
-  const cab = `<div class="f-cab"><span class="av">${esc(iniciais(p.nome))}</span><div class="tx"><b>${esc(curto(p.nome))}</b><small>Mat. ${esc(p.mat)} · Turno ${esc(p.turno || '—')} · 30 dias: ${R.filter(e => e.tipo === 'Destaque').length} ${est('Destaque')} ${R.filter(e => e.tipo === 'Atenção').length} ${est('Atenção')}</small></div><button class="bt peq" onclick="fecharFolha()"><i class="bi bi-x-lg"></i></button></div>`;
+  const cab = `<div class="f-cab"><span class="av">${esc(iniciais(p.nome))}</span><div class="tx"><b>${esc(curto(p.nome))}</b><small>Mat. ${esc(p.mat)} · Turno ${esc(p.turno || '—')} · 30 dias: ${R.filter(e => e.tipo === 'Destaque').length} ${est('Destaque')} ${R.filter(e => e.tipo === 'Atenção').length} ${est('Atenção')}</small></div><button class="fechar" onclick="fecharFolha()" title="Fechar" aria-label="Fechar"><i class="bi bi-x-lg"></i></button></div>`;
   if (!tipo) {
-    abrirFolha(cab + `<label class="campo">Máquina agora<select onchange="F.maquina=this.value">${[...new Set([p.maquina].concat(D.equipe.maquinas.map(m => m.maquina)).filter(Boolean))].map(m => `<option ${m === F.maquina ? 'selected' : ''}>${esc(m)}</option>`).join('')}</select></label>
+    abrirFolha(cab + `<label class="campo">Máquina agora <small>(toque para trocar)</small><select class="sel-maq" onchange="F.maquina=this.value">${opcoesMaq(p)}</select></label>
       <div class="dois"><button class="grande v" onclick="abrirPessoa('${esc(mat)}','Destaque')"><i class="bi bi-star-fill"></i>Destaque<small>o que foi bem</small></button><button class="grande a" onclick="abrirPessoa('${esc(mat)}','Atenção')"><i class="bi bi-star-fill"></i>Atenção<small>o que corrigir</small></button></div>
       ${R.length ? `<div class="sub" style="margin-top:6px">Últimas: ${R.slice(-4).reverse().map(e => est(e.tipo) + ' ' + dataBR(e.data) + ' ' + esc(e.motivo)).join(' · ')}</div>` : ''}`);
     return;
   }
   const M = ESTRELAS.ordenar(D.motivos, tipo);
   abrirFolha(cab + `<button class="voltar" onclick="abrirPessoa('${esc(mat)}')"><i class="bi bi-arrow-left"></i> ${est(tipo)} ${tipo}</button>
+    <div class="maq-ag"><i class="bi bi-gear-wide-connected"></i> ${F.maquina ? esc(F.maquina) : 'Sem máquina'}</div>
     ${M.map(m => `<button class="motivo ${COR[tipo]}" onclick="registrar('${esc(m.id)}')"><span class="tx"><b>${esc(m.nome)}</b><small><i class="bi ${ICO_COMP[m.competencia] || 'bi-dot'}"></i> ${esc(m.competencia)}${m.frase ? ' · “' + esc(m.frase) + '”' : ''}</small></span>${m.favorito ? '<i class="bi bi-bookmark-star-fill fav"></i>' : ''}</button>`).join('') || '<div class="vazio">Sem motivos. Sincronize.</div>'}`);
 }
 async function registrar(motivoId) {
   const p = D.equipe.pessoas.find(x => String(x.mat) === String(F.mat)), m = D.motivos.find(x => x.id === motivoId);
   const agora = new Date();
-  const e = { id: 'cel-' + uuid(), data: ESTRELAS.isoHoje(), hora: String(agora.getHours()).padStart(2, '0') + ':' + String(agora.getMinutes()).padStart(2, '0'), motivoId, mat: p.mat, nome: p.nome, turno: p.turno, maquina: F.maquina || p.maquina, lider: p.lider, origem: 'Celular' };
+  const e = { id: 'cel-' + uuid(), data: ESTRELAS.isoHoje(), hora: String(agora.getHours()).padStart(2, '0') + ':' + String(agora.getMinutes()).padStart(2, '0'), motivoId, mat: p.mat, nome: p.nome, turno: p.turno, maquina: F.maquina || '', lider: p.lider, origem: 'Celular' };
   D.fila.push(e);
   D.estrelas.push({ ...e, tipo: m.tipo, motivo: m.nome, competencia: m.competencia, situacao: 'Ativa', pendente: true, criadoPor: C.lider });
-  fecharFolha(); await salvarD(); render();
   if (navigator.vibrate) navigator.vibrate(m.tipo === 'Destaque' ? 30 : [20, 40, 20]);
-  toast(`${est(m.tipo)} <b>${esc(m.tipo)}</b> · ${esc(curto(p.nome).split(' ')[0])} · ${esc(m.nome)}`, 'ok', 'Desfazer', () => desfazer(e.id), true);
-  enviarFila().then(render);
+  confirmacao(e, m, p);
+  await salvarD(); render();
+  enviarFila().then(() => { render(); const el = $('#confEnv'); if (el) el.innerHTML = D.fila.some(x => x.id === e.id) ? '<i class="bi bi-cloud-slash"></i> Guardada no celular: sobe quando houver internet' : '<i class="bi bi-cloud-check"></i> Gravada na planilha'; });
+}
+// tela de confirmação: fecha sozinha em 4 s (OK fecha antes; Desfazer apaga)
+let confT = null;
+function confirmacao(e, m, p) {
+  const SEG = 4; let n = SEG;
+  abrirFolha(`<div class="ok-est ${COR[m.tipo]}">${est(m.tipo, 60)}<b>${m.tipo === 'Destaque' ? 'Destaque registrado' : 'Atenção registrada'}</b>
+    <span class="q">${esc(curto(p.nome))}</span><small>${esc(m.nome)} · ${e.maquina ? esc(e.maquina) : 'sem máquina'}</small>
+    <span class="env" id="confEnv"><i class="bi bi-arrow-repeat"></i> Enviando…</span>
+    <div class="conta"><i id="contaBar"></i></div>
+    <div class="dois"><button class="bt" onclick="fecharFolha();desfazer('${esc(e.id)}')"><i class="bi bi-arrow-counterclockwise"></i> Desfazer</button><button class="bt pri" onclick="fecharFolha()"><span>OK (<span id="contaN">${SEG}</span>)</span></button></div></div>`);
+  requestAnimationFrame(() => requestAnimationFrame(() => { const b = $('#contaBar'); if (b) { b.style.transitionDuration = SEG + 's'; b.style.width = '0'; } }));
+  clearInterval(confT);
+  confT = setInterval(() => { n--; const c = $('#contaN'); if (c) c.textContent = n; if (n <= 0) fecharFolha(); }, 1000);
 }
 async function desfazer(id) {
   if (D.fila.some(e => e.id === id)) { D.fila = D.fila.filter(e => e.id !== id); D.estrelas = D.estrelas.filter(e => e.id !== id); await salvarD(); render(); return toast('Desfeito.'); }

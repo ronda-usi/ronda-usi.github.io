@@ -1,7 +1,7 @@
-/* Estrelas da Ronda — service worker (versão 1.2).
+/* Estrelas da Ronda — service worker (versão 1.2.1).
  * Guarda só os arquivos do app para abrir sem internet. Nunca intercepta a planilha (outro domínio) nem guarda dados.
  * Mesmo domínio do calendário de Férias (ferias-usinagem.github.io): só apaga os próprios caches (estrelas-*), nunca os do Férias (cal-ferias-*). */
-const CACHE = 'estrelas-1.2';
+const CACHE = 'estrelas-1.2.1';
 const BASE = ['./', 'index.html', 'manifest.webmanifest', 'estrelas-regras.js', 'logo_ksb.svg', 'icones/icone-192.png', 'icones/icone-512.png', 'icones/apple-180.png', 'icones/favicon.svg',
   'vendor/bootstrap-icons/bootstrap-icons.min.css', 'vendor/bootstrap-icons/fonts/bootstrap-icons.woff2',
   'vendor/poppins/poppins-latin-400-normal.woff2', 'vendor/poppins/poppins-latin-500-normal.woff2', 'vendor/poppins/poppins-latin-600-normal.woff2', 'vendor/poppins/poppins-latin-700-normal.woff2'];
